@@ -72,8 +72,9 @@ func ShowPartitionsStats(client *Client, tableName string) error {
 	for _, p := range partitions {
 		if p.Gpid.Appid == appID {
 			for _, pconfig := range resp.Partitions {
-				if pconfig.Primary.GetAddress() == p.Addr {
+				if pconfig.Pid.PartitionIndex == p.Gpid.PartitionIndex && pconfig.Primary.GetAddress() == p.Addr {
 					p.Gpid.PartitionIndex += 10000
+					break
 				}
 			}
 			appPartitions = append(appPartitions, p)
