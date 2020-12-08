@@ -71,6 +71,7 @@ func ShowPartitionsStats(client *Client, tableName string) error {
 	partitions := client.Perf.GetPartitionStats()
 	for _, p := range partitions {
 		if p.Gpid.Appid == appID {
+			fmt.Println(fmt.Sprintf("%d(mget:%d)", p.Gpid.PartitionIndex, p.Stats["multi_get_qps"]))
 			appPartitions = append(appPartitions, p)
 		}
 	}
@@ -82,7 +83,7 @@ func ShowPartitionsStats(client *Client, tableName string) error {
 	t := tabular.NewTemplate(partitionStatsTemplate)
 	t.SetCommonColumns([]string{"Pidx"}, func(rowData interface{}) []string {
 		partition := rowData.(*aggregate.PartitionStats)
-		return []string{fmt.Sprintf("%s(%s)", partition.Gpid.PartitionIndex, partition.Addr)}
+		return []string{fmt.Sprintf("%d(%s)", partition.Gpid.PartitionIndex, partition.Addr)}
 	})
 	t.SetColumnValueFunc(func(col *tabular.ColumnAttributes, rowData interface{}) interface{} {
 		partition := rowData.(*aggregate.PartitionStats)
