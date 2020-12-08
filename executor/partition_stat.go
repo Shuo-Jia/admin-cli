@@ -71,12 +71,6 @@ func ShowPartitionsStats(client *Client, tableName string) error {
 	partitions := client.Perf.GetPartitionStats()
 	for _, p := range partitions {
 		if p.Gpid.Appid == appID {
-			for _, pconfig := range resp.Partitions {
-				if pconfig.Pid.PartitionIndex == p.Gpid.PartitionIndex && pconfig.Primary.GetAddress() == p.Addr {
-					p.Gpid.PartitionIndex += 10000
-					break
-				}
-			}
 			appPartitions = append(appPartitions, p)
 		}
 	}
@@ -88,7 +82,7 @@ func ShowPartitionsStats(client *Client, tableName string) error {
 	t := tabular.NewTemplate(partitionStatsTemplate)
 	t.SetCommonColumns([]string{"Pidx"}, func(rowData interface{}) []string {
 		partition := rowData.(*aggregate.PartitionStats)
-		return []string{fmt.Sprint(partition.Gpid.PartitionIndex)}
+		return []string{fmt.Sprintf("%s(%s)", partition.Gpid.PartitionIndex, partition.Addr)}
 	})
 	t.SetColumnValueFunc(func(col *tabular.ColumnAttributes, rowData interface{}) interface{} {
 		partition := rowData.(*aggregate.PartitionStats)
