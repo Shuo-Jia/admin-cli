@@ -44,10 +44,12 @@ func ListNodes(client *Client) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
+	start := time.Now().Nanosecond()
 	nodes, err := getNodesMap(ctx, client)
 	if err != nil {
 		return err
 	}
+	nodesMapTime := time.Now().Nanosecond()
 
 	listTableResp, errTable := client.Meta.ListApps(ctx, &admin.ListAppsRequest{
 		Status: admin.AppStatus_AS_AVAILABLE,
@@ -55,6 +57,8 @@ func ListNodes(client *Client) error {
 	if errTable != nil {
 		return errTable
 	}
+
+	listAppTime := time.Now().Nanosecond()
 
 	for _, info := range listTableResp.Infos {
 		queryCfgResp, err := client.Meta.QueryConfig(ctx, info.AppName)
@@ -67,7 +71,13 @@ func ListNodes(client *Client) error {
 		}
 	}
 
+	queryConfigTime := time.Now().Nanosecond()
+
 	printNodesInfo(client, nodes)
+
+	printNodeTime := time.Now().Nanosecond()
+
+	fmt.Printf("nodesMapTime=%d\n listAppTime=%d\n queryConfigTime=%d printNodeTime=%d", nodesMapTime - start, listAppTime-nodesMapTime, queryConfigTime-listAppTime, printNodeTime-queryConfigTime)
 	return nil
 }
 
