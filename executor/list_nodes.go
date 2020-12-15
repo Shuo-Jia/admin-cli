@@ -77,7 +77,7 @@ func ListNodes(client *Client) error {
 
 	printNodeTime := time.Now().Nanosecond()
 
-	fmt.Printf("nodesMapTime=%d\n listAppTime=%d\n queryConfigTime=%d printNodeTime=%d", nodesMapTime - start, listAppTime-nodesMapTime, queryConfigTime-listAppTime, printNodeTime-queryConfigTime)
+	fmt.Printf("ListNodes =%d\nlistApp   =%d\nListConfig=%d\nListPrint =%d\n", nodesMapTime - start, listAppTime-nodesMapTime, queryConfigTime-listAppTime, printNodeTime-queryConfigTime)
 	return nil
 }
 
