@@ -41,16 +41,16 @@ type nodeInfoStruct struct {
 
 // ListNodes is nodes command.
 func ListNodes(client *Client) error {
-	list := time.Now().Nanosecond()
+	list := time.Now().UnixNano()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	start := time.Now().Nanosecond()
+	start := time.Now().UnixNano()
 	nodes, err := getNodesMap(ctx, client)
 	if err != nil {
 		return err
 	}
-	nodesMapTime := time.Now().Nanosecond()
+	nodesMapTime := time.Now().UnixNano()
 
 	listTableResp, errTable := client.Meta.ListApps(ctx, &admin.ListAppsRequest{
 		Status: admin.AppStatus_AS_AVAILABLE,
@@ -59,7 +59,7 @@ func ListNodes(client *Client) error {
 		return errTable
 	}
 
-	listAppTime := time.Now().Nanosecond()
+	listAppTime := time.Now().UnixNano()
 
 	for _, info := range listTableResp.Infos {
 		queryCfgResp, err := client.Meta.QueryConfig(ctx, info.AppName)
@@ -72,11 +72,11 @@ func ListNodes(client *Client) error {
 		}
 	}
 
-	queryConfigTime := time.Now().Nanosecond()
+	queryConfigTime := time.Now().UnixNano()
 
 	printNodesInfo(client, nodes)
 
-	printNodeTime := time.Now().Nanosecond()
+	printNodeTime := time.Now().UnixNano()
 
 	fmt.Printf("ListStart =%d\nListNodes =%d\nlistApp   =%d\nListConfig=%d\nListPrint =%d\nListTotal =%d\n", start-list, nodesMapTime - start, listAppTime-nodesMapTime, queryConfigTime-listAppTime, printNodeTime-queryConfigTime, printNodeTime - list)
 	return nil
