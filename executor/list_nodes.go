@@ -41,6 +41,7 @@ type nodeInfoStruct struct {
 
 // ListNodes is nodes command.
 func ListNodes(client *Client) error {
+	list := time.Now().Nanosecond()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
@@ -77,7 +78,7 @@ func ListNodes(client *Client) error {
 
 	printNodeTime := time.Now().Nanosecond()
 
-	fmt.Printf("ListNodes =%d\nlistApp   =%d\nListConfig=%d\nListPrint =%d\n", nodesMapTime - start, listAppTime-nodesMapTime, queryConfigTime-listAppTime, printNodeTime-queryConfigTime)
+	fmt.Printf("ListStart =%d\nListNodes =%d\nlistApp   =%d\nListConfig=%d\nListPrint =%d\nListTotal =%d\n", start-list, nodesMapTime - start, listAppTime-nodesMapTime, queryConfigTime-listAppTime, printNodeTime-queryConfigTime, printNodeTime - list)
 	return nil
 }
 
