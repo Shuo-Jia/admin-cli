@@ -49,10 +49,21 @@ type Client struct {
 
 // NewClient creates a client for accessing Pegasus cluster for use of admin-cli.
 func NewClient(writer io.Writer, metaAddrs []string) *Client {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10000000000)
 	defer cancel()
 
 	meta := session.NewMetaManager(metaAddrs, session.NewNodeSession)
+
+	for  {
+		resp, err := meta.QueryConfig(ctx,"dup1")
+		if err != nil {
+			fmt.Println(err)
+			time.Sleep(time.Second)
+			continue
+		}
+		fmt.Printf("table=dup1, id=%d \n", resp.AppID)
+		time.Sleep(time.Second)
+	}
 
 	// TODO(wutao): initialize replica-nodes lazily
 	resp, err := meta.ListNodes(ctx, &admin.ListNodesRequest{
