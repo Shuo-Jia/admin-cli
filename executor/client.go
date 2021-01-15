@@ -61,7 +61,7 @@ func NewClient(writer io.Writer, metaAddrs []string, table string) *Client {
 			time.Sleep(time.Second)
 			continue
 		}
-		fmt.Printf("table=dup1, id=%d \n", resp.AppID)
+		fmt.Printf("table=dup1, id=%v \n", resp)
 		time.Sleep(time.Second)
 	}
 
