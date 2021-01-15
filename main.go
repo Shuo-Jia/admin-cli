@@ -43,6 +43,7 @@ func main() {
 
 	shell.App.OnInit(func(a *grumble.App, flags grumble.FlagMap) error {
 		metaListStr := flags.String("meta")
+		tableStr := flags.String("table")
 		metaList := strings.Split(metaListStr, ",")
 		for _, metaIPPort := range metaList {
 			_, err := net.ResolveTCPAddr("tcp4", metaIPPort)
@@ -50,7 +51,7 @@ func main() {
 				return fmt.Errorf("Invalid MetaServer TCP address [%s]", err)
 			}
 		}
-		cmd.Init(metaList)
+		cmd.Init(metaList, tableStr)
 		return nil
 	})
 	grumble.Main(shell.App)

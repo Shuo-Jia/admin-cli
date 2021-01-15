@@ -30,8 +30,8 @@ var globalMetaList []string
 var pegasusClient *executor.Client
 
 // Init all commands to the shell app.
-func Init(metaList []string) {
+func Init(metaList []string, table string) {
 	globalMetaList = metaList
 
-	pegasusClient = executor.NewClient(os.Stdout, globalMetaList)
+	pegasusClient = executor.NewClient(os.Stdout, globalMetaList, table)
 }
