@@ -48,7 +48,7 @@ type Client struct {
 }
 
 // NewClient creates a client for accessing Pegasus cluster for use of admin-cli.
-func NewClient(writer io.Writer, metaAddrs []string, table string) *Client {
+func NewClient(writer io.Writer, metaAddrs []string, table string, interval int) *Client {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*1000000)
 	defer cancel()
 
@@ -58,11 +58,11 @@ func NewClient(writer io.Writer, metaAddrs []string, table string) *Client {
 		resp, err := meta.QueryConfig(ctx,table)
 		if err != nil {
 			fmt.Println(err)
-			time.Sleep(time.Second)
+			time.Sleep(time.Duration(interval))
 			continue
 		}
 		fmt.Printf("table=%s, id=%v \n", table, resp)
-		time.Sleep(time.Second)
+		time.Sleep(time.Duration(interval))
 	}
 
 	// TODO(wutao): initialize replica-nodes lazily
