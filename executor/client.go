@@ -58,11 +58,11 @@ func NewClient(writer io.Writer, metaAddrs []string, table string, interval int)
 		resp, err := meta.QueryConfig(ctx,table)
 		if err != nil {
 			fmt.Println(err)
-			time.Sleep(time.Duration(interval))
+			time.Sleep(time.Duration(interval * 1000 * 1000))
 			continue
 		}
 		fmt.Printf("table=%s, id=%v \n", table, resp)
-		time.Sleep(time.Duration(interval))
+		time.Sleep(time.Duration(interval * 1000 * 1000))
 	}
 
 	// TODO(wutao): initialize replica-nodes lazily
