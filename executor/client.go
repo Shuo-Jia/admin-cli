@@ -23,6 +23,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
 	"time"
 
@@ -48,21 +49,38 @@ type Client struct {
 }
 
 // NewClient creates a client for accessing Pegasus cluster for use of admin-cli.
-func NewClient(writer io.Writer, metaAddrs []string, table string, interval int) *Client {
+func NewClient(writer io.Writer, metaAddrs []string, testAddrs []string, table string, interval int) *Client {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*1000000)
 	defer cancel()
 
 	meta := session.NewMetaManager(metaAddrs, session.NewNodeSession)
 
-	for  {
-		resp, err := meta.QueryConfig(ctx,table)
-		if err != nil {
-			fmt.Println(err)
-			time.Sleep(time.Duration(interval * 1000 * 1000))
-			continue
-		}
-		fmt.Printf("table=%s, id=%v \n", table, resp)
-		time.Sleep(time.Duration(interval * 1000 * 1000))
+	tstMeta := session.NewMetaManager(testAddrs, session.NewNodeSession)
+	respt, _ := tstMeta.ListApps(ctx, &admin.ListAppsRequest{
+		Status: admin.AppStatus_AS_DROPPED,
+	})
+
+	var tbList = []string{table}
+	for _, tb := range respt.Infos {
+		tbList = append(tbList, tb.AppName)
+	}
+	thread := interval
+
+	for thread > 0 {
+		go func() {
+			fmt.Printf("submit task=%d", interval - thread)
+			for {
+				resp, err := meta.QueryConfig(ctx, tbList[rand.Intn(len(tbList))])
+				if err != nil {
+					fmt.Println(err)
+					time.Sleep(time.Duration(interval * 1000 * 1000))
+					continue
+				}
+				fmt.Printf("table=%s, id=%v \n", table, resp)
+				time.Sleep(time.Duration(interval * 1000 * 1000))
+			}
+		}()
+		time.Sleep(time.Second*1000000)
 	}
 
 	// TODO(wutao): initialize replica-nodes lazily
