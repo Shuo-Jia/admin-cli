@@ -64,11 +64,11 @@ func NewClient(writer io.Writer, metaAddrs []string, testAddrs []string, table s
 	for _, tb := range respt.Infos {
 		tbList = append(tbList, tb.AppName)
 	}
-	thread := interval
+	thread := (interval + 10) / 10
 
 	for thread > 0 {
 		go func() {
-			fmt.Printf("submit task=%d", interval - thread)
+			fmt.Printf("submit task=%d", thread)
 			for {
 				resp, err := meta.QueryConfig(ctx, tbList[rand.Intn(len(tbList))])
 				if err != nil {
@@ -80,7 +80,7 @@ func NewClient(writer io.Writer, metaAddrs []string, testAddrs []string, table s
 				time.Sleep(time.Duration(interval * 1000 * 1000))
 			}
 		}()
-		time.Sleep(time.Second*1000000)
+		time.Sleep(time.Second * 1000000)
 	}
 
 	// TODO(wutao): initialize replica-nodes lazily
