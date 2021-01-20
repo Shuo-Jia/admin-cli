@@ -31,6 +31,7 @@ import (
 	"github.com/XiaoMi/pegasus-go-client/session"
 	"github.com/pegasus-kv/admin-cli/executor/util"
 	"github.com/pegasus-kv/collector/aggregate"
+	falcon "github.com/niean/goperfcounter"
 )
 
 // Client represents as a manager of various SDKs that
@@ -66,11 +67,14 @@ func NewClient(writer io.Writer, metaAddrs []string, testAddrs []string, table s
 	}
 	thread := (interval + 10) / 10
 
+
 	for thread > 0 {
 		go func() {
 			fmt.Printf("submit task=%d", thread)
 			for {
+				start := time.Now().Nanosecond()
 				resp, err := meta.QueryConfig(ctx, tbList[rand.Intn(len(tbList))])
+				falcon.SetGaugeValue("query_meta_proxy_latency", float64(time.Now().Nanosecond()-start))
 				if err != nil {
 					fmt.Println(err)
 					time.Sleep(time.Duration(interval * 1000 * 1000))

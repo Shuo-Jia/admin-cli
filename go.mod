@@ -16,6 +16,9 @@ require (
 	github.com/magiconair/properties v1.8.4 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/mitchellh/mapstructure v1.4.0 // indirect
+	github.com/niean/go-metrics-lite v0.0.0-20151230091537-b5d30971b578 // indirect
+	github.com/niean/goperfcounter v0.0.0-20160108100052-24860a8d3fac
+	github.com/niean/gotools v0.0.0-20151221085310-ff3f51fc5c60 // indirect
 	github.com/olekukonko/tablewriter v0.0.4
 	github.com/pegasus-kv/collector v0.0.0-20201209040317-d27335267f44
 	github.com/pelletier/go-toml v1.8.1 // indirect
