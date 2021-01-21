@@ -72,18 +72,20 @@ func NewClient(writer io.Writer, metaAddrs []string, testAddrs []string, table s
 	fmt.Printf("internal=%d ms \n", interval)
 	for thread > 0 {
 		go func() {
-			fmt.Printf("submit task=%d \n", thread)
+			t := thread
+			fmt.Printf("submit task=%d \n", t)
 			for {
 				rand.Seed(time.Now().Unix())
 				start := time.Now().Nanosecond()
-				resp, err := meta.QueryConfig(ctx, tbList[rand.Intn(len(tbList))])
+				index := rand.Intn(len(tbList))
+				resp, err := meta.QueryConfig(ctx, tbList[index])
 				falcon.SetGaugeValue("query_meta_proxy_latency", float64(time.Now().Nanosecond()-start))
 				if err != nil {
 					fmt.Println(err)
 					time.Sleep(time.Duration(interval * 1000 * 1000))
 					continue
 				}
-				fmt.Printf("thread=%d, table=%s, id=%v \n", thread, table, resp)
+				fmt.Printf("index=%d, thread=%d, table=%s, id=%v \n", index, t, table, resp)
 				time.Sleep(time.Duration(interval * 1000 * 1000))
 			}
 		}()
