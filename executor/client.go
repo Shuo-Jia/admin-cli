@@ -67,6 +67,9 @@ func NewClient(writer io.Writer, metaAddrs []string, testAddrs []string, table s
 	}
 	thread := (interval + 10) / 10
 
+	fmt.Printf("table=%d \n", len(tbList))
+	fmt.Printf("thread=%d \n", thread)
+	fmt.Printf("internal=%d ms \n", interval)
 	for thread > 0 {
 		go func() {
 			fmt.Printf("submit task=%d \n", thread)
