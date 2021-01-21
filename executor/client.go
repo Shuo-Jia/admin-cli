@@ -61,13 +61,9 @@ func NewClient(writer io.Writer, metaAddrs []string, testAddrs []string, table s
 		Status: admin.AppStatus_AS_DROPPED,
 	})
 
-	var tbList = []string{table}
-	for _, tb := range  {
-		tbList = append(tbList, tb.AppName)
-	}
 	thread := (interval + 10) / 10
 
-	fmt.Printf("table=%d \n", len(tbList))
+	fmt.Printf("table=%d \n", len(respt.Infos))
 	fmt.Printf("thread=%d \n", thread)
 	fmt.Printf("internal=%d ms \n", interval)
 	for thread > 0 {
@@ -77,7 +73,7 @@ func NewClient(writer io.Writer, metaAddrs []string, testAddrs []string, table s
 			for {
 				rand.Seed(time.Now().Unix())
 				start := time.Now().Nanosecond()
-				index := rand.Intn(len(tbList))
+				index := rand.Intn(len(respt.Infos))
 				resp, err := meta.QueryConfig(ctx, respt.Infos[index].AppName)
 				falcon.SetGaugeValue("query_meta_proxy_latency", float64(time.Now().Nanosecond()-start))
 				if err != nil {
