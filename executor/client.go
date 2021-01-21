@@ -74,6 +74,7 @@ func NewClient(writer io.Writer, metaAddrs []string, testAddrs []string, table s
 		go func() {
 			fmt.Printf("submit task=%d \n", thread)
 			for {
+				rand.Seed(time.Now().Unix())
 				start := time.Now().Nanosecond()
 				resp, err := meta.QueryConfig(ctx, tbList[rand.Intn(len(tbList))])
 				falcon.SetGaugeValue("query_meta_proxy_latency", float64(time.Now().Nanosecond()-start))
@@ -82,7 +83,7 @@ func NewClient(writer io.Writer, metaAddrs []string, testAddrs []string, table s
 					time.Sleep(time.Duration(interval * 1000 * 1000))
 					continue
 				}
-				fmt.Printf("table=%s, id=%v \n", table, resp)
+				fmt.Printf("thread=%d, table=%s, id=%v \n", thread, table, resp)
 				time.Sleep(time.Duration(interval * 1000 * 1000))
 			}
 		}()
