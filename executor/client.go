@@ -75,7 +75,7 @@ func NewClient(writer io.Writer, metaAddrs []string, testAddrs []string, table s
 				start := time.Now().Nanosecond()
 				index := rand.Intn(len(respt.Infos))
 				resp, err := meta.QueryConfig(ctx, respt.Infos[index].AppName)
-				falcon.SetGaugeValue("query_meta_proxy_latency", float64(time.Now().Nanosecond()-start))
+				falcon.SetHistogramCount("query_meta_proxy_latency", int64(time.Now().Nanosecond()-start))
 				if err != nil {
 					fmt.Println(err)
 					time.Sleep(time.Duration(interval * 1000 * 1000))
