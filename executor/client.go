@@ -85,7 +85,7 @@ func NewClient(writer io.Writer, metaAddrs []string, testAddrs []string, table s
 					time.Sleep(time.Duration(interval * 1000 * 1000))
 					continue
 				}
-				fmt.Printf("index=%d, thread=%d, table=%s, id=%v \n", index, t, table, resp)
+				fmt.Printf("index=%d, thread=%d, table=%s, id=%v \n", index, t, tbList[index], resp)
 				time.Sleep(time.Duration(interval * 1000 * 1000))
 			}
 		}()
