@@ -42,8 +42,8 @@ func main() {
 	})
 
 	shell.App.OnInit(func(a *grumble.App, flags grumble.FlagMap) error {
-		metaListStr := flags.String("meta")
-		tstMetaStr := flags.String("tst")
+		metaListStr := flags.String("region")
+		tstMetaStr := flags.String("meta")
 		tableStr := flags.String("table")
 		interval := flags.Int("interval")
 

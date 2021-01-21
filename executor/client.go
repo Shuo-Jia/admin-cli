@@ -29,9 +29,9 @@ import (
 
 	"github.com/XiaoMi/pegasus-go-client/idl/admin"
 	"github.com/XiaoMi/pegasus-go-client/session"
+	falcon "github.com/niean/goperfcounter"
 	"github.com/pegasus-kv/admin-cli/executor/util"
 	"github.com/pegasus-kv/collector/aggregate"
-	falcon "github.com/niean/goperfcounter"
 )
 
 // Client represents as a manager of various SDKs that
@@ -66,7 +66,6 @@ func NewClient(writer io.Writer, metaAddrs []string, testAddrs []string, table s
 		tbList = append(tbList, tb.AppName)
 	}
 	thread := (interval + 10) / 10
-
 
 	for thread > 0 {
 		go func() {
