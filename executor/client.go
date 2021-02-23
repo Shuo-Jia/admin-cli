@@ -74,13 +74,25 @@ func NewClient(writer io.Writer, metaAddrs []string, testAddrs []string, table s
 				rand.Seed(time.Now().Unix())
 				start := time.Now().Nanosecond()
 				index := rand.Intn(len(respt.Infos))
-				resp, err := meta.QueryConfig(ctx, "dup")
-				falcon.SetHistogramCount("query_meta_proxy_latency", int64(time.Now().Nanosecond()-start))
+				if len(table) != 0 {
+					fmt.Printf("query table: %s\n", table)
+					resp, err := meta.QueryConfig(ctx, table)
+					falcon.SetHistogramCount("query_meta_proxy_latency", int64(time.Now().Nanosecond()-start))
+					if err != nil {
+						fmt.Println(err)
+						time.Sleep(time.Duration(interval * 1000 * 1000))
+						continue
+					}
+					fmt.Printf("table=%s, resp=%s", table, resp)
+				}
+				fmt.Printf("query table: %s\n", respt.Infos[index].AppName)
+				resp, err := meta.QueryConfig(ctx, respt.Infos[index].AppName)
 				if err != nil {
 					fmt.Println(err)
 					time.Sleep(time.Duration(interval * 1000 * 1000))
 					continue
 				}
+				falcon.SetHistogramCount("query_meta_proxy_latency", int64(time.Now().Nanosecond()-start))
 				fmt.Printf("index=%d, thread=%d, table=%s(%s), id=%v \n\n", index, t, respt.Infos[index].AppName, respt.Infos[index].Status, resp)
 				time.Sleep(time.Duration(interval * 1000 * 1000))
 			}

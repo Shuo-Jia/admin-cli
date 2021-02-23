@@ -39,7 +39,7 @@ func init() {
 		Description: "Pegasus administration command line tool",
 		Flags: func(f *grumble.Flags) {
 			f.String("r", "region", "127.0.0.1:34601,127.0.0.1:34602", "a list of MetaServer IP:Port addresses")
-			f.String("t", "table", "not_existed", "help")
+			f.String("t", "table", "", "help")
 			f.String("m", "meta", "127.0.0.1:34601,127.0.0.1:34602", "help")
 			f.Int("i", "interval", 1000, "help")
 		},
